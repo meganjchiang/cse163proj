@@ -53,6 +53,8 @@ def main():
     # remove alphabetic scores -> DONE
     # convert scores to fractions/floats -> DONE
     # add new column of sentiment score (NLTK) to merged dataset
+    # create visualizations
+    # create ML model and calculate accuracy/error
 
 
 if __name__ == '__main__':
