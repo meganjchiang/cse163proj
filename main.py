@@ -39,6 +39,10 @@ def convert_to_float(fraction: str) -> float:
 
     return float(numbers[0]) / float(numbers[1])
 
+# First data visualization 
+# Second data visualization 
+# Third data visualization
+
 
 def main():
     movies = pd.read_csv('rotten_tomatoes_movies.csv')
@@ -55,6 +59,8 @@ def main():
     # add new column of sentiment score (NLTK) to merged dataset
     # create visualizations
     # create ML model and calculate accuracy/error
+
+    
 
 
 if __name__ == '__main__':
