@@ -27,6 +27,10 @@ def merge_and_clean(movies: pd.DataFrame,
     movie_reviews['review_score'] = \
         movie_reviews['review_score'].apply(convert_to_float)
 
+    # add column for updated scores (labels of 1-5)
+    movie_reviews['score_category'] = \
+        movie_reviews['review_score'].apply(convert_to_category)
+
     # return merged and cleaned dataset
     return movie_reviews
 
@@ -38,6 +42,19 @@ def convert_to_float(fraction: str) -> float:
     numbers = fraction.split("/")
 
     return float(numbers[0]) / float(numbers[1])
+
+
+def convert_to_category(score: float) -> str:
+    if score <= 0.2:
+        return "1"
+    elif score <= 0.4:
+        return "2"
+    elif score <= 0.6:
+        return "3"
+    elif score <= 0.8:
+        return "4"
+    else:
+        return "5"
 
 # First data visualization 
 # Second data visualization 
@@ -59,6 +76,8 @@ def main():
     # add new column of sentiment score (NLTK) to merged dataset
     # create visualizations
     # create ML model and calculate accuracy/error
+
+    movie_reviews.to_csv('movie_reviews.csv')
 
     
 
