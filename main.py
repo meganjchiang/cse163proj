@@ -56,8 +56,8 @@ def convert_to_category(score: float) -> str:
     else:
         return "5"
 
-# First data visualization 
-# Second data visualization 
+# First data visualization
+# Second data visualization
 # Third data visualization
 
 
@@ -78,8 +78,6 @@ def main():
     # create ML model and calculate accuracy/error
 
     movie_reviews.to_csv('movie_reviews.csv')
-
-    
 
 
 if __name__ == '__main__':
