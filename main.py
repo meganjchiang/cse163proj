@@ -77,8 +77,6 @@ def main():
     # create visualizations
     # create ML model and calculate accuracy/error
 
-    movie_reviews.to_csv('movie_reviews.csv')
-
 
 if __name__ == '__main__':
     main()
