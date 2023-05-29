@@ -262,6 +262,8 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
     avg_scores = movie_reviews.groupby('movie_title')['review_score'].mean()
 
     # get average review word counts
+    # source:
+    # https://stackoverflow.com/questions/65677906/average-word-length-of-a-column-using-python
     avg_word_counts = movie_reviews.groupby('movie_title')['review_content'].apply(
                         lambda x: sum(len(str(review).split()) for review in x) / float(len(x))
                       )
