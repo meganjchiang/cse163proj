@@ -2,12 +2,16 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
-import nltk
-import string
-from nltk import word_tokenize
-from nltk.probability import FreqDist
-from nltk.corpus import stopwords
+# import nltk
+# import string
+# from nltk import word_tokenize
+# from nltk.probability import FreqDist
+# from nltk.corpus import stopwords
 # from wordcloud import WordCloud
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
 
 sns.set()
 
@@ -282,6 +286,53 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
     plt.savefig('ave_word_count_vs_score.png', bbox_inches='tight')
 
 
+# source:
+# https://www.mygreatlearning.com/blog/bag-of-words/
+def fit_and_predict(movie_reviews: pd.DataFrame):
+    X = movie_reviews['review_content']
+    y = movie_reviews['score_category']
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+    vectorizer = TfidfVectorizer()
+
+    X_train_vectorized = vectorizer.fit_transform(X_train)
+
+    X_test_vectorized = vectorizer.transform(X_test)
+
+    model = LogisticRegression(max_iter=1000)
+
+    model.fit(X_train_vectorized, y_train)
+
+    y_pred = model.predict(X_test_vectorized)
+
+    accuracy = accuracy_score(y_test, y_pred)
+    print("Accuracy:", accuracy)
+
+    # sns.regplot(x=X_train, y=y_train, logistic=True, ci=None)
+    # plt.xlabel('Review Content')
+    # plt.ylabel('Score Category')
+    # plt.title('Logistic Regression Curve')
+    # plt.show()
+
+    # y_pred = model.predict_proba(X_test_vectorized)[:, 1]  # Get predicted probabilities for the positive class
+
+    # accuracy = accuracy_score(y_test, y_pred.round())
+    # print("Accuracy:", accuracy)
+
+    # # Create a numerical range for the x-axis
+    # x_range = np.arange(len(X_test))
+
+    # # Create a dataframe with the numerical x-axis and the predicted probabilities
+    # predictions_df = pd.DataFrame({'X': x_range, 'y_pred': y_pred})
+
+    # sns.regplot(x='X', y='y_pred', data=predictions_df, logistic=True, ci=None)
+    # plt.xlabel('Review Index')
+    # plt.ylabel('Probability of Positive Class')
+    # plt.title('Logistic Regression Curve')
+    # plt.show()
+
+
 def main():
     movies = pd.read_csv('rotten_tomatoes_movies.csv')
     reviews = pd.read_csv('filtered_reviews.csv')
@@ -290,12 +341,12 @@ def main():
     movie_reviews = merge_and_clean(movies, reviews)
 
     # first data visualization (top and bottom 20 movies)
-    plot_top_20_movies(movie_reviews)
-    plot_bottom_20_movies(movie_reviews)
-    wordcloud_positive(movie_reviews)
-    wordcloud_negative(movie_reviews)
+    # plot_top_20_movies(movie_reviews)
+    # plot_bottom_20_movies(movie_reviews)
+    # wordcloud_positive(movie_reviews)
+    # wordcloud_negative(movie_reviews)
     # word_count_vs_review_score(movie_reviews)
-
+    fit_and_predict(movie_reviews)
 
     # to do:
     # remove rows with null review scores -> DONE
