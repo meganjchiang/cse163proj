@@ -1,12 +1,13 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
 # import nltk
 import string
-from nltk import word_tokenize
-from nltk.probability import FreqDist
-from nltk.corpus import stopwords
-from wordcloud import WordCloud
+# from nltk import word_tokenize
+# from nltk.probability import FreqDist
+# from nltk.corpus import stopwords
+# from wordcloud import WordCloud
 
 sns.set()
 
@@ -289,6 +290,58 @@ def wordcloud_negative(movie_reviews: pd.DataFrame) -> None:
     plt.show()
 
 # Third data visualization
+# Third data visualization
+def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
+     # create new plot (otherwise plots will save on top of it)
+    plt.figure()
+
+    # get average review scores
+    avg_scores = movie_reviews.groupby('movie_title')['review_score'].mean()
+
+    # get average review word counts
+    avg_word_counts = movie_reviews.groupby('movie_title')['review_content'].apply(
+                        lambda x: sum(len(str(review).split()) for review in x) / float(len(x))
+                      )
+
+    data = pd.DataFrame({'Average Review Score': avg_scores, 'Average Word Count': avg_word_counts})
+
+    # create scatter plot
+    sns.scatterplot(x='Average Word Count', y='Average Review Score', data=data)
+
+    # add line of best fit
+    sns.relplot(x='Average Word Count', y='Average Review Score', data=data)
+
+    # plot labels
+    plt.xlabel('Average Word Count')
+    plt.ylabel('Average Review Score')
+    plt.title('Relationship between Average Word Count and Average Review Score')
+
+    # save plot to image
+    plt.savefig('ave_word_count_vs_score.png', bbox_inches='tight')
+
+    # ______________________________________________________ #
+
+    # # get the word count of each review from review_content
+    # word_counts = [len(str(review).split()) for \
+    #                review in movie_reviews['review_content']]
+    
+    # # get the review_score of each review from review_score
+    # review_scores = movie_reviews['review_score']
+
+    # # turn into Pandas DataFrame
+    # data = pd.DataFrame({'Word Count': word_counts, 'Review Score': review_scores})
+    # data.to_csv("test")
+
+    # # plot
+    # sns.relplot(x="Word Count", y="Review Score", data=data)
+
+    # # plot labels
+    # plt.xlabel('Word Count')
+    # plt.ylabel('Review Score')
+    # plt.title('Word Count vs Review Score')
+
+    # # save plot to image
+    # plt.savefig('testing_regular.png', bbox_inches='tight')
 
 
 def main():
@@ -301,8 +354,9 @@ def main():
     # first data visualization (top and bottom 20 movies)
     plot_top_20_movies(movie_reviews)
     plot_bottom_20_movies(movie_reviews)
-    wordcloud_positive(movie_reviews)
-    wordcloud_negative(movie_reviews)
+    # wordcloud_positive(movie_reviews)
+    # wordcloud_negative(movie_reviews)
+    word_count_vs_review_score(movie_reviews)
 
 
     # to do:
