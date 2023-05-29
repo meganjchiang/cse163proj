@@ -290,7 +290,6 @@ def wordcloud_negative(movie_reviews: pd.DataFrame) -> None:
     plt.show()
 
 # Third data visualization
-# Third data visualization
 def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
      # create new plot (otherwise plots will save on top of it)
     plt.figure()
@@ -308,13 +307,10 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
     # create scatter plot
     sns.scatterplot(x='Average Word Count', y='Average Review Score', data=data)
 
-    # add line of best fit
-    sns.relplot(x='Average Word Count', y='Average Review Score', data=data)
-
     # plot labels
     plt.xlabel('Average Word Count')
     plt.ylabel('Average Review Score')
-    plt.title('Relationship between Average Word Count and Average Review Score')
+    plt.title('Average Word Count vs. Average Review Score per Movie')
 
     # save plot to image
     plt.savefig('ave_word_count_vs_score.png', bbox_inches='tight')
