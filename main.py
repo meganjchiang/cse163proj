@@ -1,12 +1,12 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import numpy as np
-# import nltk
+# import numpy as np
+import nltk
 import string
-# from nltk import word_tokenize
-# from nltk.probability import FreqDist
-# from nltk.corpus import stopwords
+from nltk import word_tokenize
+from nltk.probability import FreqDist
+from nltk.corpus import stopwords
 # from wordcloud import WordCloud
 
 sns.set()
@@ -75,25 +75,27 @@ def plot_top_20_movies(movie_reviews: pd.DataFrame) -> None:
     # create new plot (otherwise plots will save on top of it)
     plt.figure()
 
-    # get number of reviews for each movie
-    num_reviews = movie_reviews.groupby('movie_title')['movie_title'].count()
+    # # get number of reviews for each movie
+    # num_reviews = movie_reviews.groupby('movie_title')['movie_title'].count()
 
-    # filter for only movies with at least 25 reviews
-    at_least_25_reviews = num_reviews[num_reviews >= 25]  # 471 total
+    # # filter for only movies with at least 25 reviews
+    # at_least_25_reviews = num_reviews[num_reviews >= 25]  # 471 total
 
-    # get movie titles
-    movie_titles = pd.Series(at_least_25_reviews.keys())
+    # # get movie titles
+    # movie_titles = pd.Series(at_least_25_reviews.keys())
 
-    # get rows of movies (from movie_reviews) that arein movie_titles series
-    has_at_least_25_reviews = movie_reviews['movie_title'].isin(movie_titles)
-    movies = movie_reviews[has_at_least_25_reviews]
+    # # get rows of movies (from movie_reviews) that are in movie_titles series
+    # has_at_least_25_reviews = movie_reviews['movie_title'].isin(movie_titles)
+    # movies = movie_reviews[has_at_least_25_reviews]
 
-    # get top 20 movies with highest average ratings
-    avg_scores = movies.groupby('movie_title')['score_category'].mean()
-    top_20_movies = avg_scores.nlargest(20)
+    # # get top 20 movies with highest average ratings
+    # avg_scores = movies.groupby('movie_title')['score_category'].mean()
+    # top_20_movies = avg_scores.nlargest(20)
 
-    # convert series to dataframe
-    top_20_movies = top_20_movies.reset_index()
+    # # convert series to dataframe
+    # top_20_movies = top_20_movies.reset_index()
+
+    top_20_movies = get_top_20_movies(movie_reviews)
 
     # make bar chart
     top_20_plot = sns.barplot(data=top_20_movies, x='score_category',
@@ -121,25 +123,27 @@ def plot_bottom_20_movies(movie_reviews: pd.DataFrame) -> None:
     # create new plot (otherwise plots will save on top of it)
     plt.figure()
 
-    # get number of reviews for each movie
-    num_reviews = movie_reviews.groupby('movie_title')['movie_title'].count()
+    # # get number of reviews for each movie
+    # num_reviews = movie_reviews.groupby('movie_title')['movie_title'].count()
 
-    # filter for only movies with at least 25 reviews
-    at_least_25_reviews = num_reviews[num_reviews >= 25]  # 471 total
+    # # filter for only movies with at least 25 reviews
+    # at_least_25_reviews = num_reviews[num_reviews >= 25]  # 471 total
 
-    # get movie titles
-    movie_titles = pd.Series(at_least_25_reviews.keys())
+    # # get movie titles
+    # movie_titles = pd.Series(at_least_25_reviews.keys())
 
-    # get rows of movies (from movie_reviews) that arein movie_titles series
-    has_at_least_25_reviews = movie_reviews['movie_title'].isin(movie_titles)
-    movies = movie_reviews[has_at_least_25_reviews]
+    # # get rows of movies (from movie_reviews) that are in movie_titles series
+    # has_at_least_25_reviews = movie_reviews['movie_title'].isin(movie_titles)
+    # movies = movie_reviews[has_at_least_25_reviews]
 
-    # get top 20 movies with lowest average ratings
-    avg_scores = movies.groupby('movie_title')['score_category'].mean()
-    bottom_20_movies = avg_scores.nsmallest(20)
+    # # get top 20 movies with lowest average ratings
+    # avg_scores = movies.groupby('movie_title')['score_category'].mean()
+    # bottom_20_movies = avg_scores.nsmallest(20)
 
-    # convert series to dataframe
-    bottom_20_movies = bottom_20_movies.reset_index()
+    # # convert series to dataframe
+    # bottom_20_movies = bottom_20_movies.reset_index()
+
+    bottom_20_movies = get_bottom_20_movies(movie_reviews)
 
     # make bar chart
     bottom_20_plot = sns.barplot(data=bottom_20_movies,
@@ -167,31 +171,32 @@ def plot_bottom_20_movies(movie_reviews: pd.DataFrame) -> None:
 # Second data visualization
 def wordcloud_positive(movie_reviews: pd.DataFrame) -> None:
 
-    # get number of reviews for each movie
-    num_reviews = movie_reviews.groupby('movie_title')['movie_title'].count()
+    # # get number of reviews for each movie
+    # num_reviews = movie_reviews.groupby('movie_title')['movie_title'].count()
 
-    # filter for only movies with at least 25 reviews
-    at_least_25_reviews = num_reviews[num_reviews >= 25]  # 471 total
-    print(at_least_25_reviews)
+    # # filter for only movies with at least 25 reviews
+    # at_least_25_reviews = num_reviews[num_reviews >= 25]  # 471 total
+    # print(at_least_25_reviews)
 
-    # get movie titles
-    movie_titles = pd.Series(at_least_25_reviews.keys())
+    # # get movie titles
+    # movie_titles = pd.Series(at_least_25_reviews.keys())
 
-    # get rows of movies (from movie_reviews) that arein movie_titles series
-    has_at_least_25_reviews = movie_reviews['movie_title'].isin(movie_titles)
-    movies = movie_reviews[has_at_least_25_reviews]
+    # # get rows of movies (from movie_reviews) that are in movie_titles series
+    # has_at_least_25_reviews = movie_reviews['movie_title'].isin(movie_titles)
+    # movies = movie_reviews[has_at_least_25_reviews]
 
-    # get top 20 movies with highest average ratings
-    avg_scores = movies.groupby('movie_title')['score_category'].mean()
-    top_20_movies = avg_scores.nlargest(20)
+    # # get top 20 movies with highest average ratings
+    # avg_scores = movies.groupby('movie_title')['score_category'].mean()
+    # top_20_movies = avg_scores.nlargest(20)
 
-    # convert series to dataframe
-    top_20_movies = top_20_movies.reset_index()
+    # # convert series to dataframe
+    # top_20_movies = top_20_movies.reset_index()
+
+    top_20_movies = get_top_20_movies(movie_reviews)
 
     # getting the top 20 movies with its columns 
     top_20_movie_reviews = movie_reviews[movie_reviews['movie_title'].isin(top_20_movies['movie_title'])]
     top_20_movie_reviews = top_20_movie_reviews.reset_index()
-    # top_20_movie_reviews.to_csv('testttt.csv')
 
     # creating subset of positive and negative reviews
     positive_reviews = movie_reviews[movie_reviews['score_category'] > 3]
@@ -229,32 +234,33 @@ def wordcloud_positive(movie_reviews: pd.DataFrame) -> None:
 
 def wordcloud_negative(movie_reviews: pd.DataFrame) -> None:
 
-    # get number of reviews for each movie
-    num_reviews = movie_reviews.groupby('movie_title')['movie_title'].count()
+    # # get number of reviews for each movie
+    # num_reviews = movie_reviews.groupby('movie_title')['movie_title'].count()
 
-    # filter for only movies with at least 25 reviews
-    at_least_25_reviews = num_reviews[num_reviews >= 25]  # 471 total
-    print(at_least_25_reviews)
+    # # filter for only movies with at least 25 reviews
+    # at_least_25_reviews = num_reviews[num_reviews >= 25]  # 471 total
+    # print(at_least_25_reviews)
    
-    # get movie titles
-    movie_titles = pd.Series(at_least_25_reviews.keys())
+    # # get movie titles
+    # movie_titles = pd.Series(at_least_25_reviews.keys())
 
-    # get rows of movies (from movie_reviews) that are in movie_titles series
-    has_at_least_25_reviews = movie_reviews['movie_title'].isin(movie_titles)
-    movies = movie_reviews[has_at_least_25_reviews]
-    #print(movies)
+    # # get rows of movies (from movie_reviews) that are in movie_titles series
+    # has_at_least_25_reviews = movie_reviews['movie_title'].isin(movie_titles)
+    # movies = movie_reviews[has_at_least_25_reviews]
+    # #print(movies)
 
-    # get top 20 movies with highest average ratings
-    avg_scores = movies.groupby('movie_title')['score_category'].mean()
-    top_20_movies = avg_scores.nlargest(20)
+    # # get top 20 movies with highest average ratings
+    # avg_scores = movies.groupby('movie_title')['score_category'].mean()
+    # top_20_movies = avg_scores.nlargest(20)
 
-    # convert series to dataframe
-    top_20_movies = top_20_movies.reset_index()
+    # # convert series to dataframe
+    # top_20_movies = top_20_movies.reset_index()
+
+    bottom_20_movies = get_bottom_20_movies(movie_reviews)
 
     # getting the top 20 movies with its columns 
-    top_20_movie_reviews = movie_reviews[movie_reviews['movie_title'].isin(top_20_movies['movie_title'])]
-    top_20_movie_reviews = top_20_movie_reviews.reset_index()
-    # top_20_movie_reviews.to_csv('testttt.csv')
+    bottom_20_movie_reviews = movie_reviews[movie_reviews['movie_title'].isin(bottom_20_movies['movie_title'])]
+    bottom_20_movie_reviews = bottom_20_movie_reviews.reset_index()
 
     # creating subset of negative reviews
     negative_reviews = movie_reviews[movie_reviews['score_category'] < 3]
@@ -289,6 +295,45 @@ def wordcloud_negative(movie_reviews: pd.DataFrame) -> None:
     plt.savefig('negative_wordcloud.png', dpi=300, bbox_inches='tight')
     plt.show()
 
+
+def get_movies_at_least_25_reviews(movie_reviews: pd.DataFrame) -> pd.DataFrame:
+    # get number of reviews for each movie
+    num_reviews = movie_reviews.groupby('movie_title')['movie_title'].count()
+
+    # filter for only movies with at least 25 reviews
+    at_least_25_reviews = num_reviews[num_reviews >= 25]  # 471 total
+
+    # get movie titles
+    movie_titles = pd.Series(at_least_25_reviews.keys())
+
+    # get rows of movies (from movie_reviews) that are in movie_titles series
+    has_at_least_25_reviews = movie_reviews['movie_title'].isin(movie_titles)
+
+    return movie_reviews[has_at_least_25_reviews]
+
+
+def get_top_20_movies(movie_reviews: pd.DataFrame) -> pd.DataFrame:
+    movies = get_movies_at_least_25_reviews(movie_reviews)
+    
+    # get top 20 movies with highest average ratings
+    avg_scores = movies.groupby('movie_title')['score_category'].mean()
+    top_20_movies = avg_scores.nlargest(20)
+
+    # return top_20_movies as dataframe
+    return top_20_movies.reset_index()
+
+
+def get_bottom_20_movies(movie_reviews: pd.DataFrame) -> pd.DataFrame:
+    movies = get_movies_at_least_25_reviews(movie_reviews)
+    
+    # get top 20 movies with highest average ratings
+    avg_scores = movies.groupby('movie_title')['score_category'].mean()
+    top_20_movies = avg_scores.nsmallest(20)
+
+    # return top_20_movies as dataframe
+    return top_20_movies.reset_index()
+
+
 # Third data visualization
 def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
      # create new plot (otherwise plots will save on top of it)
@@ -315,30 +360,6 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
     # save plot to image
     plt.savefig('ave_word_count_vs_score.png', bbox_inches='tight')
 
-    # ______________________________________________________ #
-
-    # # get the word count of each review from review_content
-    # word_counts = [len(str(review).split()) for \
-    #                review in movie_reviews['review_content']]
-    
-    # # get the review_score of each review from review_score
-    # review_scores = movie_reviews['review_score']
-
-    # # turn into Pandas DataFrame
-    # data = pd.DataFrame({'Word Count': word_counts, 'Review Score': review_scores})
-    # data.to_csv("test")
-
-    # # plot
-    # sns.relplot(x="Word Count", y="Review Score", data=data)
-
-    # # plot labels
-    # plt.xlabel('Word Count')
-    # plt.ylabel('Review Score')
-    # plt.title('Word Count vs Review Score')
-
-    # # save plot to image
-    # plt.savefig('testing_regular.png', bbox_inches='tight')
-
 
 def main():
     movies = pd.read_csv('rotten_tomatoes_movies.csv')
@@ -350,9 +371,9 @@ def main():
     # first data visualization (top and bottom 20 movies)
     plot_top_20_movies(movie_reviews)
     plot_bottom_20_movies(movie_reviews)
-    # wordcloud_positive(movie_reviews)
-    # wordcloud_negative(movie_reviews)
-    word_count_vs_review_score(movie_reviews)
+    wordcloud_positive(movie_reviews)
+    wordcloud_negative(movie_reviews)
+    # word_count_vs_review_score(movie_reviews)
 
 
     # to do:
