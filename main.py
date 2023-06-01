@@ -338,8 +338,7 @@ def main():
     reviews = pd.read_csv('filtered_reviews.csv')
 
     # join 2 datasets and clean
-    # movie_reviews = merge_and_clean(movies, reviews)
-    merge_and_clean(movies, reviews)
+    movie_reviews = merge_and_clean(movies, reviews)
 
     # first data visualization (top and bottom 20 movies)
     # plot_top_20_movies(movie_reviews)
