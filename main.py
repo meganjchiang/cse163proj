@@ -93,10 +93,10 @@ def plot_top_20_movies(movie_reviews: pd.DataFrame) -> None:
                           fontsize=10, fontweight='bold', padding=4)
 
     # title and axes labels
-    plt.suptitle('Top 20 Highest-Rated Movies* on Rotten Tomatoes (Reviews from 2015-2020)',
+    plt.suptitle('Top 20 Highest-Rated Movies* on Rotten Tomatoes (2015-2020)',
                  fontsize='large', fontweight='bold', x=0.2)
-    plt.title('*For Movies With At Least 25 Reviews',
-              fontsize='small', x=0.58, y=1.02)
+    plt.title('*For Movies With At Least 30 Reviews',
+              fontsize='small', x=0.46, y=1.02)
     plt.xlabel("Average Review Score", fontweight='bold')
     plt.ylabel("Movie", fontweight='bold')
 
@@ -122,10 +122,10 @@ def plot_bottom_20_movies(movie_reviews: pd.DataFrame) -> None:
                              fontsize=10, fontweight='bold', padding=4)
 
     # title and axes labels
-    plt.suptitle('Top 20 Lowest-Rated Movies* on Rotten Tomatoes (Reviews from 2015-2020)',
+    plt.suptitle('Top 20 Lowest-Rated Movies* on Rotten Tomatoes (2015-2020)',
                  fontsize='large', fontweight='bold', x=0.35)
-    plt.title('*For Movies With At Least 25 Reviews',
-              fontsize='small', x=0.78, y=1.02)
+    plt.title('*For Movies With At Least 30 Reviews',
+              fontsize='small', x=0.65, y=1.02)
     plt.xlabel("Average Review Score", fontweight='bold')
     plt.ylabel("Movie", fontweight='bold')
     plt.xticks(range(6))
@@ -134,16 +134,22 @@ def plot_bottom_20_movies(movie_reviews: pd.DataFrame) -> None:
     # save plot
     plt.savefig('20_lowest_rated_movies.png', bbox_inches='tight')
 
+
 # Second data visualization
 def wordcloud_positive(movie_reviews: pd.DataFrame) -> None:
-    # get top 20 movies (from movies with at least 25 reviews)
+    '''
+    Takes a pandas data frame and generate a word cloud 
+    containing the most frequency words based on positive reviews
+    '''
+    # Get top 20 movies
     top_20_movies = get_top_20_movies(movie_reviews)
 
-    # getting the top 20 movies with its columns 
-    top_20_movie_reviews = movie_reviews[movie_reviews['movie_title'].isin(top_20_movies['movie_title'])]
-    top_20_movie_reviews = top_20_movie_reviews.reset_index()
+    # Get the top 20 movies with its columns
+    top_20_movie_reviews = movie_reviews[
+            movie_reviews['movie_title'].isin(top_20_movies['movie_title'])
+]   top_20_movie_reviews = top_20_movie_reviews.reset_index()
 
-    # creating subset of positive and negative reviews
+    # Create subset of positive reviews
     positive_reviews = movie_reviews[movie_reviews['score_category'] > 3]
 
     # Get the set of stopwords
@@ -152,17 +158,25 @@ def wordcloud_positive(movie_reviews: pd.DataFrame) -> None:
     # Get the set of punctuations 
     punctuation_set = set(string.punctuation)
 
-    # Additional punctuations 
+    # Get the dditional punctuations 
     add_punc = ["'s", "'nt", "n't"]
 
-    # Remove stopwords and punctuations
+    # Initialize an empty list to store cleaned words from positive reviews
     positive_words = []
+
+    # Iterate through each review and remove stopwords and punctuations
     for review in positive_reviews['review_content']:
         words = word_tokenize(review)
-        cleaned_words = [word.lower() for word in words if word.lower() not in stopwords_set and word not in punctuation_set and not all(char in string.punctuation for char in word) and word not in add_punc]
+        cleaned_words = [
+                        word.lower() for word in words if (
+                        word.lower() not in stopwords_set and
+                        word not in punctuation_set and
+                        not all(char in string.punctuation for char in word) and
+                        word not in add_punc)
+                        ]
         positive_words.extend(cleaned_words)
 
-    # Find the top 10 most common words
+    # Find the frequency of positve words
     positive_freq = FreqDist(positive_words)
 
     # Convert the word frequency distribution to a string
@@ -178,14 +192,18 @@ def wordcloud_positive(movie_reviews: pd.DataFrame) -> None:
 
 
 def wordcloud_negative(movie_reviews: pd.DataFrame) -> None:
-    # get bottom 20 movies (from movies with at least 25 reviews)
+    '''
+    Takes a pandas data frame and generate a word cloud 
+    containing the most frequency words based on negative reviews
+    '''
+    # Get bottom 20 movies
     bottom_20_movies = get_bottom_20_movies(movie_reviews)
 
-    # getting the top 20 movies with its columns 
+    # Get the bottom 20 movies with its columns 
     bottom_20_movie_reviews = movie_reviews[movie_reviews['movie_title'].isin(bottom_20_movies['movie_title'])]
     bottom_20_movie_reviews = bottom_20_movie_reviews.reset_index()
 
-    # creating subset of negative reviews
+    # Create subset of negative reviews
     negative_reviews = movie_reviews[movie_reviews['score_category'] < 3]
 
     # Get the set of stopwords
@@ -194,17 +212,25 @@ def wordcloud_negative(movie_reviews: pd.DataFrame) -> None:
     # Get the set of punctuations 
     punctuation_set = set(string.punctuation)
 
-    # additional punctuations 
+    # Get additional punctuations 
     add_punc = ["'s", "'nt", "n't"]
     
-    # remove stopwords and punctuations for negative reviews
+    # Initialize an empty list to store cleaned words from negative reviews
     negative_words = []
+
+    # Iterate through each review and remove stopwords and punctuations
     for review in negative_reviews['review_content']:
         words = word_tokenize(review)
-        cleaned_words = [word.lower() for word in words if word.lower() not in stopwords_set and word not in punctuation_set and not all(char in string.punctuation for char in word) and word not in add_punc]
+        cleaned_words = [
+                        word.lower() for word in words if (
+                        word.lower() not in stopwords_set and
+                        word not in punctuation_set and
+                        not all(char in string.punctuation for char in word) and
+                        word not in add_punc)
+                        ]
         negative_words.extend(cleaned_words)
 
-    # Find the top 10 most common words
+    # Find the frequency of negative words
     negative_freq = FreqDist(negative_words)
 
     # Convert the word frequency distribution to a string
@@ -360,3 +386,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
