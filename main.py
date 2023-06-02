@@ -93,10 +93,10 @@ def plot_top_20_movies(movie_reviews: pd.DataFrame) -> None:
                           fontsize=10, fontweight='bold', padding=4)
 
     # title and axes labels
-    plt.suptitle('Top 20 Highest-Rated Movies* on Rotten Tomatoes (2015-2020)',
+    plt.suptitle('Top 20 Highest-Rated Movies* on Rotten Tomatoes (Reviews from 2015-2020)',
                  fontsize='large', fontweight='bold', x=0.2)
-    plt.title('*For Movies With At Least 30 Reviews',
-              fontsize='small', x=0.46, y=1.02)
+    plt.title('*For Movies With At Least 25 Reviews',
+              fontsize='small', x=0.58, y=1.02)
     plt.xlabel("Average Review Score", fontweight='bold')
     plt.ylabel("Movie", fontweight='bold')
 
@@ -122,10 +122,10 @@ def plot_bottom_20_movies(movie_reviews: pd.DataFrame) -> None:
                              fontsize=10, fontweight='bold', padding=4)
 
     # title and axes labels
-    plt.suptitle('Top 20 Lowest-Rated Movies* on Rotten Tomatoes (2015-2020)',
+    plt.suptitle('Top 20 Lowest-Rated Movies* on Rotten Tomatoes (Reviews from 2015-2020)',
                  fontsize='large', fontweight='bold', x=0.35)
-    plt.title('*For Movies With At Least 30 Reviews',
-              fontsize='small', x=0.65, y=1.02)
+    plt.title('*For Movies With At Least 25 Reviews',
+              fontsize='small', x=0.78, y=1.02)
     plt.xlabel("Average Review Score", fontweight='bold')
     plt.ylabel("Movie", fontweight='bold')
     plt.xticks(range(6))
