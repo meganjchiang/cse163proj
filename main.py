@@ -9,16 +9,16 @@ movie review ratings from Rotten Tomatoes.
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import numpy as np
 import string
 from nltk import word_tokenize
 from nltk.probability import FreqDist
 from nltk.corpus import stopwords
 from wordcloud import WordCloud
 from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
+
 
 sns.set()
 
@@ -208,8 +208,9 @@ def wordcloud_positive(movie_reviews: pd.DataFrame) -> None:
     positive_freq_txt = ' '.join(positive_freq.keys())
 
     # Create word cloud for positive subset
-    positive_wordcloud = WordCloud(width=1000, height=1000,
-                                   background_color='white').generate(positive_freq_txt)
+    positive_wordcloud = (WordCloud(width=1000, height=1000,
+                                    background_color='white')
+                          .generate(positive_freq_txt))
     plt.figure(figsize=(12, 12))
     plt.imshow(positive_wordcloud, interpolation="bilinear")
     plt.axis('off')
@@ -241,7 +242,7 @@ def wordcloud_negative(movie_reviews: pd.DataFrame) -> None:
 
     # Get additional punctuations
     add_punc = ["'s", "'nt", "n't"]
-    
+
     # Initialize an empty list to store cleaned words from negative reviews
     negative_words = []
 
@@ -265,8 +266,9 @@ def wordcloud_negative(movie_reviews: pd.DataFrame) -> None:
     negative_freq_txt = ' '.join(negative_freq.keys())
 
     # Create word cloud for negative subset
-    negative_wordcloud = WordCloud(width=1000, height=1000,
-                                   background_color='white').generate(negative_freq_txt)
+    negative_wordcloud = (WordCloud(width=1000, height=1000,
+                                    background_color='white')
+                          .generate(negative_freq_txt))
     plt.figure(figsize=(12, 12))
     plt.imshow(negative_wordcloud, interpolation="bilinear")
     plt.axis('off')
@@ -331,6 +333,11 @@ def _get_bottom_20_movies(movie_reviews: pd.DataFrame) -> pd.DataFrame:
 
 # Third data visualization
 def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
+    """
+    Takes in the given dataset and generates a data visualization
+    in the form of a scatterplot that compares the average review
+    score to average review word count per movie.
+    """
     # create new plot (otherwise plots will save on top of it)
     plt.figure()
 
@@ -340,11 +347,15 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
     # get average review word counts
     # source:
     # https://stackoverflow.com/questions/65677906/average-word-length-of-a-column-using-python
-    avg_word_counts = movie_reviews.groupby('movie_title')['review_content'].apply(
-                        lambda x: sum(len(str(review).split()) for review in x) / float(len(x))
-                      )
+    avg_word_counts = (movie_reviews.groupby('movie_title')['review_content']
+                       .apply(
+                        lambda x: sum(len(str(review).split()) for review in x)
+                        / float(len(x))
+                      ))
 
-    data = pd.DataFrame({'Average Review Score': avg_scores, 'Average Word Count': avg_word_counts})
+    # imputting the points into a dataframe to be used to plot
+    data = pd.DataFrame({'Average Review Score': avg_scores,
+                         'Average Word Count': avg_word_counts})
 
     # create scatter plot
     sns.scatterplot(x='Average Word Count', y='Average Review Score',
@@ -359,51 +370,62 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
     plt.savefig('ave_word_count_vs_score.png', bbox_inches='tight')
 
 
-# source:
+# sources:
 # https://www.mygreatlearning.com/blog/bag-of-words/
+# https://sahanidharmendra19.medium.com/understanding-countvectorizer-tfidftransformer-tfidfvectorizer-with-calculation-7d509efd470f
 def fit_and_predict(movie_reviews: pd.DataFrame):
     X = movie_reviews['review_content']
     y = movie_reviews['score_category']
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X,
+                                                        y,
+                                                        test_size=0.2,
+                                                        random_state=42)
 
-    vectorizer = TfidfVectorizer()
+    # Create an instance of the CountVectorizer
+    count_vectorizer = CountVectorizer()
 
-    X_train_vectorized = vectorizer.fit_transform(X_train)
+    # Fit and transform the training data
+    X_train_counts = count_vectorizer.fit_transform(X_train)
 
-    X_test_vectorized = vectorizer.transform(X_test)
+    # Create an instance of the TfidfTransformer
+    tfidf_transformer = TfidfTransformer()
 
-    model = LogisticRegression(max_iter=1000)
+    # Fit and transform the training data with TF-IDF
+    X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
 
-    model.fit(X_train_vectorized, y_train)
+    # Transform the testing data using the same vectorizers
+    X_test_counts = count_vectorizer.transform(X_test)
+    X_test_tfidf = tfidf_transformer.transform(X_test_counts)
 
-    y_pred = model.predict(X_test_vectorized)
+    # Create an instance of the logistic regression model
+    model = LogisticRegression(max_iter=1000,
+                               multi_class='multinomial',
+                               solver='lbfgs')
 
+    # Train the model using the vectorized training data and corresponding
+    # labels
+    model.fit(X_train_tfidf, y_train)
+
+    # Predict the score categories for the testing data
+    y_pred = model.predict(X_test_tfidf)
+
+    # Calculate the accuracy of the model
     accuracy = accuracy_score(y_test, y_pred)
     print("Accuracy:", accuracy)
 
-    # sns.regplot(x=X_train, y=y_train, logistic=True, ci=None)
-    # plt.xlabel('Review Content')
-    # plt.ylabel('Score Category')
-    # plt.title('Logistic Regression Curve')
-    # plt.show()
+    # Create a confusion matrix
+    cm = pd.crosstab(y_test,
+                     y_pred,
+                     rownames=['Actual'],
+                     colnames=['Predicted'])
 
-    # y_pred = model.predict_proba(X_test_vectorized)[:, 1]  # Get predicted probabilities for the positive class
-
-    # accuracy = accuracy_score(y_test, y_pred.round())
-    # print("Accuracy:", accuracy)
-
-    # # Create a numerical range for the x-axis
-    # x_range = np.arange(len(X_test))
-
-    # # Create a dataframe with the numerical x-axis and the predicted probabilities
-    # predictions_df = pd.DataFrame({'X': x_range, 'y_pred': y_pred})
-
-    # sns.regplot(x='X', y='y_pred', data=predictions_df, logistic=True, ci=None)
-    # plt.xlabel('Review Index')
-    # plt.ylabel('Probability of Positive Class')
-    # plt.title('Logistic Regression Curve')
-    # plt.show()
+    # Create a heatmap
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(cm, annot=True, cmap="Blues", fmt="d")
+    plt.title("Confusion Matrix - Actual vs. Predicted")
+    plt.savefig("machine_learning.png")
 
 
 def main():
@@ -413,13 +435,12 @@ def main():
     # join 2 datasets and clean
     movie_reviews = merge_and_clean(movies, reviews)
 
-    # first data visualization (top and bottom 20 movies)
-    plot_top_20_movies(movie_reviews)
-    plot_bottom_20_movies(movie_reviews)
+    # plot_top_20_movies(movie_reviews)
+    # plot_bottom_20_movies(movie_reviews)
     # wordcloud_positive(movie_reviews)
     # wordcloud_negative(movie_reviews)
     # word_count_vs_review_score(movie_reviews)
-    # fit_and_predict(movie_reviews)
+    fit_and_predict(movie_reviews)
 
 
 if __name__ == '__main__':
