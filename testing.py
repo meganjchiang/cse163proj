@@ -93,7 +93,7 @@ def test_plot_bottom_20_movies(movie_reviews: pd.DataFrame) -> None:
 
 def test_word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
     """
-    Tests the word_count_vs_review_score() function
+    Tests the word_count_vs_review_score() function.
     """
     # create new plot (otherwise plots will save on top of it)
     plt.figure()
@@ -127,17 +127,15 @@ def test_word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
     plt.savefig('test_ave_word_count_vs_score.png', bbox_inches='tight')
 
 
-def test_fit_and_predict(movie_reviews: pd.DataFrame):
+def test_fit_and_predict(movie_reviews: pd.DataFrame) -> float:
     """
-    Tests the fit_and_predict() function
+    Tests the fit_and_predict() function.
     """
     X = movie_reviews['review_content']
     y = movie_reviews['score_category']
 
     # Split the data into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(X,
-                                                        y,
-                                                        test_size=0.2,
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
                                                         random_state=42)
 
     # Create an instance of the CountVectorizer
@@ -168,10 +166,6 @@ def test_fit_and_predict(movie_reviews: pd.DataFrame):
     # Predict the score categories for the testing data
     y_pred = model.predict(X_test_tfidf)
 
-    # Calculate the accuracy of the model
-    accuracy = accuracy_score(y_test, y_pred)
-    print("Accuracy:", accuracy)
-
     # Create a confusion matrix
     cm = pd.crosstab(y_test,
                      y_pred,
@@ -184,6 +178,9 @@ def test_fit_and_predict(movie_reviews: pd.DataFrame):
     plt.title("Confusion Matrix - Actual vs. Predicted")
     plt.savefig("test_machine_learning.png")
 
+    # Calculate the accuracy of the model
+    return accuracy_score(y_test, y_pred)
+
 
 def main():
     test_movie_reviews = pd.read_csv('40_movies.csv')
@@ -193,7 +190,8 @@ def main():
     # call function to test positive word cloud
     # call function to test negative word cloud
     test_word_count_vs_review_score(test_movie_reviews)
-    test_fit_and_predict(test_movie_reviews)
+    print('Testing accuracy:')
+    print(test_fit_and_predict(test_movie_reviews))
 
 
 if __name__ == "__main__":

@@ -379,7 +379,7 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
 # https://sahanidharmendra19.medium.com/understanding-countvectorizer-tfidftransformer-tfidfvectorizer-with-calculation-7d509efd470f
 # https://pandas.pydata.org/docs/reference/api/pandas.crosstab.html
 # https://seaborn.pydata.org/generated/seaborn.heatmap.html
-def fit_and_predict(movie_reviews: pd.DataFrame):
+def fit_and_predict(movie_reviews: pd.DataFrame) -> float:
     X = movie_reviews['review_content']
     y = movie_reviews['score_category']
 
@@ -417,10 +417,6 @@ def fit_and_predict(movie_reviews: pd.DataFrame):
     # Predict the score categories for the testing data
     y_pred = model.predict(X_test_tfidf)
 
-    # Calculate the accuracy of the model
-    accuracy = accuracy_score(y_test, y_pred)
-    print("Accuracy:", accuracy)
-
     # Create a confusion matrix
     cm = pd.crosstab(y_test,
                      y_pred,
@@ -433,6 +429,9 @@ def fit_and_predict(movie_reviews: pd.DataFrame):
     plt.title("Confusion Matrix - Actual vs. Predicted")
     plt.savefig("machine_learning.png")
 
+    # Calculate the accuracy of the model
+    return accuracy_score(y_test, y_pred)
+
 
 def main():
     movies = pd.read_csv('rotten_tomatoes_movies.csv')
@@ -441,12 +440,13 @@ def main():
     # join 2 datasets and clean
     movie_reviews = merge_and_clean(movies, reviews)
 
-    # plot_top_20_movies(movie_reviews)
-    # plot_bottom_20_movies(movie_reviews)
-    # wordcloud_positive(movie_reviews)
-    # wordcloud_negative(movie_reviews)
-    # word_count_vs_review_score(movie_reviews)
-    fit_and_predict(movie_reviews)
+    plot_top_20_movies(movie_reviews)
+    plot_bottom_20_movies(movie_reviews)
+    wordcloud_positive(movie_reviews)
+    wordcloud_negative(movie_reviews)
+    word_count_vs_review_score(movie_reviews)
+    print('Accuracy:')
+    print(fit_and_predict(movie_reviews))
 
 
 if __name__ == '__main__':
