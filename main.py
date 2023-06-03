@@ -4,8 +4,6 @@ CSE 163 AD/Group 055
 Implements functions that visualize and predict
 movie review ratings from Rotten Tomatoes.
 """
-
-
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -340,7 +338,9 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
     """
     Takes in the given dataset and generates a data visualization
     in the form of a scatterplot that compares the average review
-    score to average review word count per movie.
+    score to average review word count per movie. Also generates
+    a distribution subplot to show the distributions of each
+    variable, word count and review score.
     """
     # create new plot (otherwise plots will save on top of it)
     plt.figure()
@@ -370,8 +370,28 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
     plt.ylabel('Average Review Score')
     plt.title('Average Word Count vs. Average Review Score per Movie')
 
-    # save plot to image
+    # save scatter plot to image
     plt.savefig('ave_word_count_vs_score.png', bbox_inches='tight')
+
+    # create a figure size for distribution visualization
+    plt.figure(figsize=[11, 5])
+
+    # distribution of word counts
+    plt.subplot(1, 2, 1)
+    plt.hist(avg_word_counts, bins=10)
+    plt.xlabel('Average Word Count')
+    plt.ylabel('Frequency')
+    plt.title('Distribution of Average Review Word Counts')
+
+    # distribution of review scores
+    plt.subplot(1, 2, 2)
+    plt.hist(avg_scores, bins=10)
+    plt.xlabel('Average Review Score')
+    plt.ylabel('Frequency')
+    plt.title('Distribution of Average Review Scores')
+
+    # save distribution plots to image
+    plt.savefig("distributions_count_score.png")
 
 
 # sources:

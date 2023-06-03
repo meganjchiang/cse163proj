@@ -1,7 +1,17 @@
+"""
+Megan Chiang, Michelle Kim, Jasmine Wong
+CSE 163 AD/Group 055
+Implements the data cleaning for the original dataset
+to make it usable for the scope of our project.
+"""
 import pandas as pd
 
 
 def main():
+    """
+    Filters the original data, keeps top critis, drops
+    non values, and keeps reviews from 2015-2020.
+    """
     # reading in ORIGINAL review data for cleaning
     reviews = pd.read_csv('rotten_tomatoes_critic_reviews.csv')
     reviews = reviews[['rotten_tomatoes_link', 'critic_name', 'top_critic',
