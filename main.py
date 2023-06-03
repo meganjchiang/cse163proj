@@ -374,7 +374,7 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
     plt.savefig('ave_word_count_vs_score.png', bbox_inches='tight')
 
     # create a figure size for distribution visualization
-    plt.figure(figsize=[11, 5])
+    plt.figure(figsize=[10, 5])
 
     # distribution of word counts
     plt.subplot(1, 2, 1)
@@ -462,8 +462,8 @@ def main():
 
     plot_top_20_movies(movie_reviews)
     plot_bottom_20_movies(movie_reviews)
-    wordcloud_positive(movie_reviews)
-    wordcloud_negative(movie_reviews)
+    # wordcloud_positive(movie_reviews)
+    # wordcloud_negative(movie_reviews)
     word_count_vs_review_score(movie_reviews)
     print('Accuracy:')
     print(fit_and_predict(movie_reviews))
