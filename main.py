@@ -373,6 +373,8 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
 # sources:
 # https://www.mygreatlearning.com/blog/bag-of-words/
 # https://sahanidharmendra19.medium.com/understanding-countvectorizer-tfidftransformer-tfidfvectorizer-with-calculation-7d509efd470f
+# https://pandas.pydata.org/docs/reference/api/pandas.crosstab.html
+# https://seaborn.pydata.org/generated/seaborn.heatmap.html
 def fit_and_predict(movie_reviews: pd.DataFrame):
     X = movie_reviews['review_content']
     y = movie_reviews['score_category']
