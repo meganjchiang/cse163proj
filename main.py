@@ -91,7 +91,9 @@ def plot_top_20_movies(movie_reviews: pd.DataFrame) -> None:
     """
     Takes the given dataset and plots a bar chart of the 20 best
     movies based on average critic rating. Only considers movies
-    with at least 25 ratings.
+    with at least 25 ratings. If multiple movies have the same
+    average rating, they will be displayed in the order they
+    appear in the dataset.
     """
     # create new plot (otherwise plots will save on top of it)
     plt.figure()
@@ -126,7 +128,9 @@ def plot_bottom_20_movies(movie_reviews: pd.DataFrame) -> None:
     """
     Takes the given dataset and plots a bar chart of the 20 worst
     movies based on average critic rating. Only considers movies
-    with at least 25 ratings.
+    with at least 25 ratings. If multiple movies have the same
+    average rating, they will be displayed in the order they
+    appear in the dataset.
     """
     # create new plot (otherwise plots will save on top of it)
     plt.figure()
