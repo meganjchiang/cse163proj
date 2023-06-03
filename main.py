@@ -403,10 +403,10 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
 def fit_and_predict(movie_reviews: pd.DataFrame) -> float:
     """
     Fits a logistic regression model to predict the review score
-    category based on the review content from the given movie_reviews
-    data set and also generates a heat map visualization of the
-    model to show accuracy vs predicted. Returns the accuracy score of the
-    model.
+    category based on the review content, using a bag of words approach,
+    from the given movie_reviews data set and also generates a heat map
+    visualization of the model to show accuracy vs predicted. Returns
+    the accuracy score of the model.
     """
     X = movie_reviews['review_content']
     y = movie_reviews['score_category']
