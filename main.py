@@ -117,6 +117,7 @@ def plot_top_20_movies(movie_reviews: pd.DataFrame) -> None:
               fontsize='small', x=0.58, y=1.02)
     plt.xlabel("Average Review Score", fontweight='bold')
     plt.ylabel("Movie", fontweight='bold')
+    plt.xticks(range(6))
 
     # save plot
     plt.savefig('20_highest_rated_movies.png', bbox_inches='tight')

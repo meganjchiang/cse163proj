@@ -51,6 +51,7 @@ def test_plot_top_20_movies(movie_reviews: pd.DataFrame) -> None:
               fontsize='small', x=0.58, y=1.02)
     plt.xlabel("Average Review Score", fontweight='bold')
     plt.ylabel("Movie", fontweight='bold')
+    plt.xticks(range(6))
 
     # save plot
     plt.savefig('test_20_highest_rated_movies.png', bbox_inches='tight')
@@ -187,9 +188,9 @@ def main():
 
     test_plot_top_20_movies(test_movie_reviews)
     test_plot_bottom_20_movies(test_movie_reviews)
-    # call function to test positive word cloud
-    # call function to test negative word cloud
-    test_word_count_vs_review_score(test_movie_reviews)
+    # # call function to test positive word cloud
+    # # call function to test negative word cloud
+    # test_word_count_vs_review_score(test_movie_reviews)
     print('Testing accuracy:')
     print(test_fit_and_predict(test_movie_reviews))
 
