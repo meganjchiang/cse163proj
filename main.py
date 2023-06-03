@@ -462,8 +462,8 @@ def main():
 
     plot_top_20_movies(movie_reviews)
     plot_bottom_20_movies(movie_reviews)
-    # wordcloud_positive(movie_reviews)
-    # wordcloud_negative(movie_reviews)
+    wordcloud_positive(movie_reviews)
+    wordcloud_negative(movie_reviews)
     word_count_vs_review_score(movie_reviews)
     print('Accuracy:')
     print(fit_and_predict(movie_reviews))
