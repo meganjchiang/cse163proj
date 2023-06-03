@@ -8,7 +8,7 @@ def main():
                        'review_score', 'review_date', 'review_content']]
 
     # filtering for top critic
-    is_top_critic = (reviews['top_critic'] == True)
+    is_top_critic = reviews['top_critic'] == 'True'
     filtered_reviews = reviews[is_top_critic]
 
     # dropping reviews without review scores
