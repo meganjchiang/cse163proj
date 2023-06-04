@@ -462,20 +462,30 @@ def fit_and_predict(movie_reviews: pd.DataFrame, img_file_name: str) -> str:
     f1_scores = f1_score(y_test, y_pred, average=None)
     accuracy = accuracy_score(y_test, y_pred)
 
-    # Create a confusion matrix using the actual and predicted values
+    # get the unique labels from the 'score_category' column
+    labels = movie_reviews['score_category'].unique()
+
+    # create a dictionary to map labels to F-1 scores
+    f1_scores_dict = dict(zip(labels, f1_scores))
+
+    # get a string representation of the F-1 scores
+    f1_scores_str = ', '.join([f'{label}: {score}' for label,
+                               score in f1_scores_dict.items()])
+
+    # generate a confusion matrix using the actual and predicted values
     cm = pd.crosstab(y_test,
                      y_pred,
                      rownames=['Actual'],
                      colnames=['Predicted'])
 
-    # Create a heatmap using actual and predicted
+    # generate a heatmap using the confusion matrix
     plt.figure(figsize=(10, 8))
     sns.heatmap(cm, annot=True, cmap="Blues", fmt="d")
     plt.title("Confusion Matrix - Actual vs. Predicted")
     plt.savefig(img_file_name)
 
-    # Calculate and return the accuracy of the model
-    return f"F-1 Scores: {f1_scores}, Accuracy: {accuracy}"
+    # return the f-1 scores and accuracy in string format
+    return f"F-1 Scores: {f1_scores_str}, Accuracy: {accuracy}"
 
 
 def main():
@@ -491,7 +501,6 @@ def main():
     wordcloud_negative(movie_reviews, 'negative_wordcloud.png')
     word_count_vs_review_score(movie_reviews, 'ave_word_count_vs_score.png',
                                'distributions_count_score.png')
-    print('Accuracy:')
     print(fit_and_predict(movie_reviews, 'machine_learning.png'))
 
 
