@@ -411,25 +411,28 @@ def fit_and_predict(movie_reviews: pd.DataFrame) -> float:
     visualization of the model to show accuracy vs predicted. Returns
     the accuracy score of the model.
     """
+    # Extract the columns
     X = movie_reviews['review_content']
     y = movie_reviews['score_category']
 
-    # Split the data into training and testing sets
+    # Split the data into training and testing sets by 80/20
+    # and the random state by 42
     X_train, X_test, y_train, y_test = train_test_split(X,
                                                         y,
                                                         test_size=0.2,
                                                         random_state=42)
 
-    # Create an instance of the CountVectorizer
+    # Create an instance of the CountVectorizer to
+    # create bag of words
     count_vectorizer = CountVectorizer()
 
-    # Fit and transform the training data
+    # Fit and transform the training data with the count_vectorizer
     X_train_counts = count_vectorizer.fit_transform(X_train)
 
-    # Create an instance of the TfidfTransformer
+    # Create an instance of the TfidfTransformer to rank the words
     tfidf_transformer = TfidfTransformer()
 
-    # Fit and transform the training data with TF-IDF
+    # Fit and transform the training data with TF-IDF instance
     X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
 
     # Transform the testing data using the same vectorizers
@@ -445,22 +448,22 @@ def fit_and_predict(movie_reviews: pd.DataFrame) -> float:
     # labels
     model.fit(X_train_tfidf, y_train)
 
-    # Predict the score categories for the testing data
+    # Predict the score categories with the testing data
     y_pred = model.predict(X_test_tfidf)
 
-    # Create a confusion matrix
+    # Create a confusion matrix using the actual and predicted values
     cm = pd.crosstab(y_test,
                      y_pred,
                      rownames=['Actual'],
                      colnames=['Predicted'])
 
-    # Create a heatmap
+    # Create a heatmap using actual and predicted
     plt.figure(figsize=(10, 8))
     sns.heatmap(cm, annot=True, cmap="Blues", fmt="d")
     plt.title("Confusion Matrix - Actual vs. Predicted")
     plt.savefig("machine_learning.png")
 
-    # Calculate the accuracy of the model
+    # Calculate and return the accuracy of the model
     return accuracy_score(y_test, y_pred)
 
 
