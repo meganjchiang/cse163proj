@@ -12,3 +12,5 @@ To run the project's Python code files:
 * data_cleaning.py - reads in the "rotten_tomatoes_critic_reviews.csv" file, and outputs a new csv called "filtered_reviews.csv)
 * main.py - reads in the "filtered_reviews.csv" and "rotten_tomatoes_movies.csv", then runs the main project code.
 * testing.py - reads in a smaller subset of data "40_movies.csv" (found in the Ed Workspace) to run the tests.
+
+Link to our project's GitHub Repository: https://github.com/meganjchiang/cse163proj
