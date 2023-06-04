@@ -15,7 +15,7 @@ from wordcloud import WordCloud
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, f1_score
 
 
 sns.set()
@@ -410,13 +410,13 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame,
 # https://sahanidharmendra19.medium.com/understanding-countvectorizer-tfidftransformer-tfidfvectorizer-with-calculation-7d509efd470f
 # https://pandas.pydata.org/docs/reference/api/pandas.crosstab.html
 # https://seaborn.pydata.org/generated/seaborn.heatmap.html
-def fit_and_predict(movie_reviews: pd.DataFrame, img_file_name: str) -> float:
+def fit_and_predict(movie_reviews: pd.DataFrame, img_file_name: str) -> str:
     """
     Fits a logistic regression model to predict the review score
     category based on the review content, using a bag of words approach,
     from the given movie_reviews data set and also generates a heat map
     visualization of the model to show accuracy vs predicted. Returns
-    the accuracy score of the model.
+    the f-1 scores and accuracy score of the model in string format.
     """
     # Extract the columns
     X = movie_reviews['review_content']
@@ -458,6 +458,10 @@ def fit_and_predict(movie_reviews: pd.DataFrame, img_file_name: str) -> float:
     # Predict the score categories with the testing data
     y_pred = model.predict(X_test_tfidf)
 
+    # calculate f1 scores & accuracy score
+    f1_scores = f1_score(y_test, y_pred, average=None)
+    accuracy = accuracy_score(y_test, y_pred)
+
     # Create a confusion matrix using the actual and predicted values
     cm = pd.crosstab(y_test,
                      y_pred,
@@ -471,7 +475,7 @@ def fit_and_predict(movie_reviews: pd.DataFrame, img_file_name: str) -> float:
     plt.savefig(img_file_name)
 
     # Calculate and return the accuracy of the model
-    return accuracy_score(y_test, y_pred)
+    return f"F-1 Scores: {f1_scores}, Accuracy: {accuracy}"
 
 
 def main():
