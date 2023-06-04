@@ -49,18 +49,19 @@ def merge_and_clean(movies: pd.DataFrame,
 
     # convert scores to floats
     movie_reviews['review_score'] = \
-        movie_reviews['review_score'].apply(convert_to_float)
+        movie_reviews['review_score'].apply(_convert_to_float)
 
     # add column for updated scores (labels of 1-5)
     movie_reviews['score_category'] = \
-        movie_reviews['review_score'].apply(convert_to_label)
+        movie_reviews['review_score'].apply(_convert_to_label)
 
     # return merged and cleaned dataset
     return movie_reviews
 
 
-def convert_to_float(fraction: str) -> float:
+def _convert_to_float(fraction: str) -> float:
     """
+    Private helper function for merge_and_clean()
     Converts a given fraction (as a string type) to its float equivalent.
     """
     numbers = fraction.split("/")
@@ -68,9 +69,11 @@ def convert_to_float(fraction: str) -> float:
     return float(numbers[0]) / float(numbers[1])
 
 
-def convert_to_label(score: float) -> int:
+def _convert_to_label(score: float) -> int:
     """
-    Converts a given score (float from 0 and 1) to a label (int from 1 to 5).
+    Private helper function for merge_and_clean()
+    Converts a given score (float between 0 and 1) to
+    a label (int from 1 to 5).
     """
     if score <= 0.2:
         return 1
@@ -85,7 +88,8 @@ def convert_to_label(score: float) -> int:
 
 
 # First data visualization
-def plot_top_20_movies(movie_reviews: pd.DataFrame) -> None:
+def plot_top_20_movies(movie_reviews: pd.DataFrame,
+                       img_file_name: str) -> None:
     """
     Takes the given dataset and plots a bar chart of the 20 best
     movies based on average critic rating. Only considers movies
@@ -120,10 +124,11 @@ def plot_top_20_movies(movie_reviews: pd.DataFrame) -> None:
     plt.xticks(range(6))
 
     # save plot
-    plt.savefig('20_highest_rated_movies.png', bbox_inches='tight')
+    plt.savefig(img_file_name, bbox_inches='tight')
 
 
-def plot_bottom_20_movies(movie_reviews: pd.DataFrame) -> None:
+def plot_bottom_20_movies(movie_reviews: pd.DataFrame,
+                          img_file_name: str) -> None:
     """
     Takes the given dataset and plots a bar chart of the 20 worst
     movies based on average critic rating. Only considers movies
@@ -159,14 +164,15 @@ def plot_bottom_20_movies(movie_reviews: pd.DataFrame) -> None:
     plt.xlim(0, 5)
 
     # save plot
-    plt.savefig('20_lowest_rated_movies.png', bbox_inches='tight')
+    plt.savefig(img_file_name, bbox_inches='tight')
 
 
 # Second data visualization
-def wordcloud_positive(movie_reviews: pd.DataFrame) -> None:
+def wordcloud_positive(movie_reviews: pd.DataFrame,
+                       img_file_name: str) -> None:
     '''
-    Takes a pandas data frame and generate a word cloud
-    containing the most frequency words based on positive reviews
+    Takes the given dataset and generates a word cloud
+    containing the most frequent words in positive reviews.
     '''
     # Get top 20 movies
     top_20_movies = _get_top_20_movies(movie_reviews)
@@ -218,13 +224,14 @@ def wordcloud_positive(movie_reviews: pd.DataFrame) -> None:
     plt.figure(figsize=(12, 12))
     plt.imshow(positive_wordcloud, interpolation="bilinear")
     plt.axis('off')
-    plt.savefig('positive_wordcloud.png', dpi=300, bbox_inches='tight')
+    plt.savefig(img_file_name, dpi=300, bbox_inches='tight')
 
 
-def wordcloud_negative(movie_reviews: pd.DataFrame) -> None:
+def wordcloud_negative(movie_reviews: pd.DataFrame,
+                       img_file_name: str) -> None:
     '''
-    Takes a pandas data frame and generate a word cloud
-    containing the most frequency words based on negative reviews
+    Takes the given dataset and generates a word cloud
+    containing the most frequent words in negative reviews.
     '''
     # Get bottom 20 movies
     bottom_20_movies = _get_bottom_20_movies(movie_reviews)
@@ -279,7 +286,7 @@ def wordcloud_negative(movie_reviews: pd.DataFrame) -> None:
     plt.figure(figsize=(12, 12))
     plt.imshow(negative_wordcloud, interpolation="bilinear")
     plt.axis('off')
-    plt.savefig('negative_wordcloud.png', dpi=300, bbox_inches='tight')
+    plt.savefig(img_file_name, dpi=300, bbox_inches='tight')
 
 
 def _get_movies_at_least_25_reviews(movie_reviews:
@@ -307,8 +314,8 @@ def _get_movies_at_least_25_reviews(movie_reviews:
 def _get_top_20_movies(movie_reviews: pd.DataFrame) -> pd.DataFrame:
     """
     Private helper function for plot_top_20_movies() and wordcloud_positive().
-    Returns a dataframe containing only the 20 best movies (which have at least
-    25 reviews) based on average critic rating.
+    Returns a dataframe containing the 20 best movies (which have at least
+    25 reviews) and their average critic ratings.
     """
     movies = _get_movies_at_least_25_reviews(movie_reviews)
 
@@ -323,9 +330,9 @@ def _get_top_20_movies(movie_reviews: pd.DataFrame) -> pd.DataFrame:
 def _get_bottom_20_movies(movie_reviews: pd.DataFrame) -> pd.DataFrame:
     """
     Private helper function for plot_bottom_20_movies() and
-    wordcloud_negative(). Returns a dataframe containing only
-    the 20 worst movies (which have at least 25 reviews) based
-    on average critic rating.
+    wordcloud_negative(). Returns a dataframe containing the
+    20 worst movies (which have at least 25 reviews) and their
+    average critic ratings.
     """
     movies = _get_movies_at_least_25_reviews(movie_reviews)
 
@@ -338,7 +345,9 @@ def _get_bottom_20_movies(movie_reviews: pd.DataFrame) -> pd.DataFrame:
 
 
 # Third data visualization
-def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
+def word_count_vs_review_score(movie_reviews: pd.DataFrame,
+                               img1_file_name: str,
+                               img2_file_name: str) -> None:
     """
     Takes in the given dataset and generates a data visualization
     in the form of a scatterplot that compares the average review
@@ -375,7 +384,7 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
     plt.title('Average Word Count vs. Average Review Score per Movie')
 
     # save scatter plot to image
-    plt.savefig('ave_word_count_vs_score.png', bbox_inches='tight')
+    plt.savefig(img1_file_name, bbox_inches='tight')
 
     # create a figure size for distribution visualization
     plt.figure(figsize=[10, 5])
@@ -392,10 +401,11 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
     plt.hist(avg_scores, bins=10)
     plt.xlabel('Average Review Score')
     plt.ylabel('Frequency')
+    plt.xticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     plt.title('Distribution of Average Review Scores')
 
     # save distribution plots to image
-    plt.savefig("distributions_count_score.png")
+    plt.savefig(img2_file_name)
 
 
 # sources:
@@ -403,7 +413,7 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame) -> None:
 # https://sahanidharmendra19.medium.com/understanding-countvectorizer-tfidftransformer-tfidfvectorizer-with-calculation-7d509efd470f
 # https://pandas.pydata.org/docs/reference/api/pandas.crosstab.html
 # https://seaborn.pydata.org/generated/seaborn.heatmap.html
-def fit_and_predict(movie_reviews: pd.DataFrame) -> float:
+def fit_and_predict(movie_reviews: pd.DataFrame, img_file_name: str) -> float:
     """
     Fits a logistic regression model to predict the review score
     category based on the review content, using a bag of words approach,
@@ -461,7 +471,7 @@ def fit_and_predict(movie_reviews: pd.DataFrame) -> float:
     plt.figure(figsize=(10, 8))
     sns.heatmap(cm, annot=True, cmap="Blues", fmt="d")
     plt.title("Confusion Matrix - Actual vs. Predicted")
-    plt.savefig("machine_learning.png")
+    plt.savefig(img_file_name)
 
     # Calculate and return the accuracy of the model
     return accuracy_score(y_test, y_pred)
@@ -474,13 +484,14 @@ def main():
     # join 2 datasets and clean
     movie_reviews = merge_and_clean(movies, reviews)
 
-    # plot_top_20_movies(movie_reviews)
-    # plot_bottom_20_movies(movie_reviews)
-    wordcloud_positive(movie_reviews)
-    wordcloud_negative(movie_reviews)
-    # word_count_vs_review_score(movie_reviews)
-    # print('Accuracy:')
-    # print(fit_and_predict(movie_reviews))
+    plot_top_20_movies(movie_reviews, '20_highest_rated_movies.png')
+    # plot_bottom_20_movies(movie_reviews, '20_lowest_rated_movies.png')
+    wordcloud_positive(movie_reviews, 'positive_wordcloud.png')
+    wordcloud_negative(movie_reviews, 'negative_wordcloud.png')
+    word_count_vs_review_score(movie_reviews, 'ave_word_count_vs_score.png',
+                               'distributions_count_score.png')
+    print('Accuracy:')
+    print(fit_and_predict(movie_reviews, 'machine_learning.png'))
 
 
 if __name__ == '__main__':
