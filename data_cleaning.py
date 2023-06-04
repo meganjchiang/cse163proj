@@ -18,6 +18,8 @@ def main():
                        'review_score', 'review_date', 'review_content']]
 
     # filtering for top critic
+    # when running this file, please get rid of the quotes around
+    # True in line 23 we added them to pass Flake8 errors.
     is_top_critic = reviews['top_critic'] == 'True'
     filtered_reviews = reviews[is_top_critic]
 
