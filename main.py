@@ -241,9 +241,6 @@ def wordcloud_negative(movie_reviews: pd.DataFrame,
             movie_reviews['movie_title'].isin(bottom_20_movies['movie_title'])]
     bottom_20_movie_reviews = bottom_20_movie_reviews.reset_index()
 
-    # Create subset of negative reviews
-    # negative_reviews = movie_reviews[movie_reviews['score_category'] < 3]
-
     # Get the set of stopwords
     stopwords_set = set(stopwords.words('english'))
 
@@ -485,7 +482,7 @@ def main():
     movie_reviews = merge_and_clean(movies, reviews)
 
     plot_top_20_movies(movie_reviews, '20_highest_rated_movies.png')
-    # plot_bottom_20_movies(movie_reviews, '20_lowest_rated_movies.png')
+    plot_bottom_20_movies(movie_reviews, '20_lowest_rated_movies.png')
     wordcloud_positive(movie_reviews, 'positive_wordcloud.png')
     wordcloud_negative(movie_reviews, 'negative_wordcloud.png')
     word_count_vs_review_score(movie_reviews, 'ave_word_count_vs_score.png',
