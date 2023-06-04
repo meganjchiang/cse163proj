@@ -163,7 +163,7 @@ def test_wordcloud_negative(movie_reviews: pd.DataFrame) -> None:
     # Get the set of stopwords
     stopwords_set = set(stopwords.words('english'))
 
-    # Get the set of punctuations 
+    # Get the set of punctuations
     punctuation_set = set(string.punctuation)
 
     # Get additional punctuations 
@@ -189,7 +189,6 @@ def test_wordcloud_negative(movie_reviews: pd.DataFrame) -> None:
 
     # Find the top 100 most common words in negative reviews
     top_100_negative_words = negative_freq.most_common(100)
-    print(top_100_negative_words)
 
     # Extract the words and their frequencies
     negative_words, frequency = zip(*top_100_negative_words)
