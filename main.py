@@ -208,7 +208,7 @@ def wordcloud_positive(movie_reviews: pd.DataFrame,
     positive_freq = FreqDist(positive_words)
 
     # Find the top 100 most common words in positive reviews
-    top_100_positive_words = positive_freq.most_common(75)
+    top_100_positive_words = positive_freq.most_common(100)
 
     # Extract the words and their frequencies
     positive_words, frequency = zip(*top_100_positive_words)
