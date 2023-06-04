@@ -1,6 +1,6 @@
 # Analysis and Prediction of Movie Review Ratings on Rotten Tomatoes
 
-The project cannot be ran directly in the Ed Workspace. The project can be ran locally on an IDE of your choice.
+The project cannot be ran directly in the Ed Workspace. The project can be ran locally on an IDE of your choice in the CSE 163 Anaconda environment.
 
 Download the required data sets (rotten_tomatoes_critic_reviews.csv and rotten_tomatoes_movies.csv) at https://www.kaggle.com/datasets/stefanoleone992/rotten-tomatoes-movies-and-critic-reviews-dataset.
 
