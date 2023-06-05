@@ -7,6 +7,8 @@ Download the required data sets (rotten_tomatoes_critic_reviews.csv and rotten_t
 Note: These files are 243.17 MB total.
 
 To install the required NLTK and word cloud libraries:
+* Install NLTK by running `pip install - user - U nltk` in the IDE's terminal
+* Install wordclound by running `pip install wordcloud` in the IDE's terminal
 
 To run the project's Python code files:
 * data_cleaning.py - reads in the "rotten_tomatoes_critic_reviews.csv" file, and outputs a new csv called "filtered_reviews.csv)
