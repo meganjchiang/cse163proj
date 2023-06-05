@@ -410,6 +410,7 @@ def word_count_vs_review_score(movie_reviews: pd.DataFrame,
 # https://sahanidharmendra19.medium.com/understanding-countvectorizer-tfidftransformer-tfidfvectorizer-with-calculation-7d509efd470f
 # https://pandas.pydata.org/docs/reference/api/pandas.crosstab.html
 # https://seaborn.pydata.org/generated/seaborn.heatmap.html
+# https://www.baeldung.com/cs/multi-class-f1-score
 def fit_and_predict(movie_reviews: pd.DataFrame, img_file_name: str) -> str:
     """
     Fits a logistic regression model to predict the review score
